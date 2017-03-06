@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+    <!-- 导入JDBC资源文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+       <!-- 基本配置 -->
+       <property name="url" value="${jdbc.alibaba.url}"/>
+       <property name="username" value="${jdbc.alibaba.username}"/>
+       <property name="password" value="${jdbc.alibaba.password}"/>
+       <property name="driverClassName" value="${jdbc.alibaba.driverClassName}"/>
+       <!-- 连接池性能配置 -->
+       <property name="initialSize" value="${jdbc.alibaba.initialSize}"/>
+       <property name="minIdle" value="${jdbc.alibaba.minIdle}"/>
+       <property name="maxActive" value="${jdbc.alibaba.maxActive}"/>
+    </bean>
+    
+    <!-- Spring整合MyBatis,使用MyBatis配置文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+       <!-- 引用数据源 -->
+       <property name="dataSource" ref="dataSource"/>
+       <!-- 自动扫描*Mapper.xml配置文件 -->
+       <property name="mapperLocations" value="classpath:cn/wcj/dao/mapper/*DAO.xml"/>
+       <!-- 扫描MyBatis-Config文件,辅助PageHelper拦截器 -->
+       <property name="configLocation" value="classpath:mybatis-config.xml"/>
+       <!-- 配置实体包前缀 -->
+       <property name="typeAliasesPackage" value="cn.wcj.entity"/>
+    </bean>
+    
+    <!-- DAO接口所在包,Spring会自动扫描其下的DAOImpl类-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <property name="basePackage" value="cn.wcj.dao"/>
+       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    
+    <!-- 使用Spring面向切面的事务注解,达到平台无关性-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <!-- 引入Alibaba数据源,可靠稳定 -->
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!-- 配置事务通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+          <tx:attributes>
+               <!-- 读操作 -->
+               <tx:method name="find*" propagation="REQUIRED" read-only="true" isolation="DEFAULT" />
+               <!-- 写操作 -->
+               <tx:method name="do*" propagation="REQUIRED" isolation="DEFAULT" />
+               <!-- 扩充方法 -->
+               <tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" />
+          </tx:attributes>
+    </tx:advice>
+    
+     <!--配置事务AOP-->    
+     <aop:config>
+          <!-- 切点表达式 -->
+          <aop:pointcut expression="execution(* *..*Service*.*(..))" id="txPointcut"/>
+          <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+     </aop:config>
+    
+    
+    
+    
+     
+  
+</beans>
