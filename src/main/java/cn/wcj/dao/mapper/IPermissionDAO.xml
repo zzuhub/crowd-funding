@@ -4,6 +4,61 @@
 <!-- 映射DAO配置文件 -->
 <mapper namespace="cn.wcj.dao.IPermissionDAO">
 	
-	<select id=""></select>
+    <insert id="doCreate" parameterType="Permission">
+        INSERT INTO t_permission(name,note)VALUES(#{name},#{note})   
+    </insert>	
+    
+    <update id="doUpdate" parameterType="Permission">
+        UPDATE t_permission
+        SET name=#{name},note=#{note}
+        WHERE permission_id=#{permissionId} 
+    </update>
+    
+    <select id="findByID" parameterType="java.lang.Integer" resultType="Permission">
+          SELECT permission_id permissionId  , name , note
+          FROM t_permission
+          WHERE permission_id=#{permissionId}
+    </select>
+    
+    <delete id="doRemovePre" parameterType="java.lang.Integer">
+       DELETE FROM t_role_permission WHERE permission_id=#{id}
+    </delete>
+    
+    <delete id="doRemove" parameterType="java.lang.Integer">
+       DELETE FROM t_permission WHERE permission_id=#{id}
+    </delete>
+    
+    <insert id="doBatchCreate" parameterType="java.util.List">
+        INSERT INTO t_permission(name,note)
+        VALUES
+           <foreach collection="list" item="permission" index="index" separator=",">
+             (#{permission.name},#{permission.note})
+           </foreach>
+    </insert>
+    
+    <!-- 由于向MyBatis传入多个参数了,使用脚标区分 -->
+    <select id="findAll" resultType="Permission" parameterType="java.util.Map">
+         SELECT permission_id permissionId ,name , note
+         FROM t_permission
+         WHERE <if test="colName == 'all'">
+                  permission_id LIKE #{keyWord} 
+                  OR name LIKE #{keyWord}
+                  OR note LIKE #{keyWord}
+               </if>
+               <if test="colName == 'note'">
+                  note LIKE #{keyWord}
+               </if>
+               <if test="colName == 'name'">
+                 name LIKE #{keyWord}
+               </if>
+               <if test="colName == 'permission_id'">
+                 permission_id LIKE #{keyWord}
+               </if>
+                 
+    </select>
+    
+    
+    
+    
 	
 </mapper>

@@ -1,7 +1,5 @@
 package cn.wcj.test;
 
-import static org.junit.Assert.*;
-
 import javax.sql.DataSource;
 
 import org.junit.Test;
@@ -15,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author WangCJ 
  *思路:后台测试DAO、Service层都没问题再去连前台
  */
+
+import cn.wcj.dao.IPermissionDAO;
 @ContextConfiguration(locations={"/beans-spring.xml","/beans-mybatis.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MyBatisTest {
@@ -34,6 +34,14 @@ public class MyBatisTest {
 	@Test
 	public void testSqlSessionFactoryBean(){
 		 System.out.println(sqlSessionFactoryBean);
+	}
+	
+	@Autowired
+	private IPermissionDAO permissionDAO   ;
+	
+	@Test
+	public void testPermissionDAO(){
+		System.out.println(permissionDAO) ;
 	}
 	
 	
