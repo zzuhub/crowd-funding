@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.IRoleDAO">
+	
+	<!-- 增加一次角色,需要向三张数据表增加数据 -->
+	<insert id="doCreate" parameterType="Role">
+	       INSERT INTO t_role(name,note)VALUES(#{name},#{note})
+	</insert>
+	
+	<select id="findNextID" resultType="java.lang.Integer">
+	    SELECT auto_increment 
+		FROM information_schema.`TABLES` 
+		WHERE TABLE_SCHEMA='db_wcj' AND TABLE_NAME='t_role'
+	</select>
+	
+	<!-- 向t_role_permission表增加数据 -->
+	<insert id="doCreateAfter" parameterType="java.util.Map">
+	    INSERT INTO t_role_permission(role_id,permission_id)
+	    VALUES
+	    <foreach collection="list" item="item" index="index" separator=",">
+	        (#{roleId},#{item})
+	    </foreach>
+	</insert>
+	
+	<!-- 根据ID查询 -->
+	<!-- 使用了集合查询就不要再写别名,而是在Map集合中定义 -->
+    <select id="findByID" parameterType="java.lang.Integer" resultMap="RoleMap">
+          SELECT role_id ,name,note
+          FROM t_role 
+          WHERE role_id=#{roleId}
+    </select>
+    
+    <resultMap type="Role" id="RoleMap">
+       <id column="role_id" property="roleId" />
+       <result column="name" property="name"/>
+       <result column="note" property="note"/>
+       <collection property="permissions" ofType="Permission"
+                   column="role_id" select="findAllPermissions">
+       </collection>
+    </resultMap>
+    
+    <select id="findAllPermissions" parameterType="java.lang.Integer" 
+            resultType="Permission">
+       SELECT permission_id permissionId ,name,note
+       FROM t_permission
+       WHERE permission_id IN(
+             SELECT permission_id
+             FROM t_role_permission
+             WHERE role_id=#{roleId}
+       )
+    </select>
+    
+    <!-- 删除t_role_permission表对应的数据 -->
+    <delete id="doRemovePre" parameterType="java.lang.Integer">
+       DELETE FROM t_role_permission WHERE role_id=#{roleId}
+    </delete>
+    
+    <!-- 删除t_role表对应的数据 -->
+    <delete id="doRemove" parameterType="java.lang.Integer">
+       DELETE FROM t_role WHERE role_id=#{id}
+    </delete>
+    
+    <!-- 更新t_role单表 -->
+    <update id="doUpdate" parameterType="Role">
+       UPDATE t_role
+       SET name=#{name},note=#{note}
+       WHERE role_id=#{roleId}
+    </update>
+    
+    <!-- 批量增加t_role -->
+    <insert id="doBatchCreate" parameterType="java.util.List">
+       INSERT INTO t_role(name,note)
+       VALUES
+       <foreach collection="list" item="item" index="index" separator=",">
+           (#{item.name},#{item.note})
+       </foreach>
+    </insert>
+    
+    <select id="findAll" parameterType="java.util.Map" resultMap="RoleMap">
+        SELECT role_id,name,note
+        FROM t_role
+        WHERE <if test="colName == 'all'">
+                role_id LIKE #{keyWord}
+                OR name LIKE #{keyWord}
+                OR note LIKE #{keyWord}
+              </if>
+              <if test="colName =='role_id'">
+                role_id LIKE #{keyWord}
+              </if>
+              <if test="colName =='name'">
+                name LIKE #{keyWord}
+              </if>
+              <if test="colName =='note'">
+                note LIKE #{keyWord}
+              </if>
+    </select>
+    
+    
+    
+    
+    
+    
+    
+	
+</mapper>
