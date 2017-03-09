@@ -1,6 +1,8 @@
 package cn.wcj.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Permission implements Serializable{
 
@@ -11,6 +13,7 @@ public class Permission implements Serializable{
 	private String name   ;  //权限英文名,方便页面控制
 	
 	private String note   ;   //权限中文名,方便理解
+	
 
 	public Integer getPermissionId() {
 		return permissionId;
@@ -41,6 +44,8 @@ public class Permission implements Serializable{
 		return "Permission [permissionId=" + permissionId + ", name=" + name
 				+ ", note=" + note + "]";
 	}
+
+
 	
 	
 	
