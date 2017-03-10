@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.IUserDAO">
+	
+	<!-- 根据索引列上少计算的优化原则,不使用函数NOW()执行增加操作 -->
+    <insert id="doCreate" parameterType="User">
+       INSERT INTO t_user(name,password,last_login,status,login_err,create_time,last_ip)
+                   VALUES(#{name},#{password},#{lastLogin},#{status},#{loginErr},#{createTime},#{lastIP})
+    </insert>
+    
+    <!--向t_user_role表加数据-->
+    <insert id="doCreateAfter" parameterType="java.util.Map">
+        INSERT INTO t_user_role(user_id,role_id)
+        VALUES   
+        <foreach collection="list" index="index" item="item" separator=",">
+           (#{userId},#{item})
+        </foreach>
+    </insert>
+    
+    <select id="findNextID" resultType="java.lang.Integer">
+	    SELECT auto_increment 
+		FROM information_schema.`TABLES` 
+		WHERE TABLE_SCHEMA='db_wcj' AND TABLE_NAME='t_user'
+	</select>
+    
+    <delete id="doRemovePre" parameterType="java.lang.Integer">
+       DELETE FROM t_user_role WHERE user_id=#{userId}  ;
+       DELETE FROM t_log WHERE user_id=#{userId}   ;
+       DELETE FROM t_comment WHERE user_id=#{user_id}   ;
+       DELETE FROM t_comment 
+       WHERE project_id IN(
+                           SELECT project_id
+                           FROM t_project
+                           WHERE user_id=#{userId})   ;
+       DELETE FROM t_photo 
+       WHERE project_id IN(
+                    SELECT project_id
+                    FROM t_project
+                    WHERE user_id=#{userId})  ;
+       DELETE FROM t_approve 
+       WHERE project_id IN( 
+                            SELECT project_id
+                            FROM t_project
+                            WHERE user_id=#{userId})   ;
+      DELETE FROM t_project WHERE user_id=#{userId}     ;                                            
+    </delete>
+    
+    <delete id="doRemove" parameterType="java.lang.Integer">
+       DELETE FROM t_user WHERE user_id=#{userId}
+    </delete>
+    
+    <select id="findByID" parameterType="java.lang.Integer" resultMap="UserMap">
+       SELECT user_id,name,password,last_login,status,
+              login_err , create_time , last_ip
+       FROM t_user
+       WHERE user_id=#{userId}
+    </select>
+    
+    <resultMap type="User" id="UserMap">
+       <id column="user_id" property="userId"/>
+       <result column="name" property="name"/>
+       <result column="password" property="password"/>
+       <result column="last_login" property="lastLogin"/>
+       <result column="status" property="status"/>
+       <result column="login_err" property="loginErr" />
+       <result column="create_time" property="createTime"/>
+       <result column="last_ip" property="lastIP"/>
+       <collection property="roles" column="user_id" select="findAllRoles" />
+    </resultMap>
+    
+    <select id="findAllRoles" parameterType="java.lang.Integer" resultType="Role">
+        SELECT role_id roleId,name,note
+        FROM t_role
+        WHERE role_id IN(
+                   SELECT role_id
+                   FROM t_user_role
+                   WHERE user_id=#{userId}
+        )   
+    </select>
+    
+    <delete id="doUpdate" parameterType="User">
+       UPDATE t_user
+       SET name=#{name},password=#{password},last_login=#{lastLogin},status=#{status},
+           login_err=#{loginErr} , create_time=#{createTime},last_ip=#{lastIP}
+       WHERE user_id=#{userId}
+    </delete>
+    
+    <delete id="doUpdatePre" parameterType="java.lang.Integer">
+       DELETE FROM t_user_role WHERE user_id=#{userId}
+    </delete>
+    
+    <!-- 动态SQL语句 -->
+    <select id="findAll" parameterType="java.util.Map" resultMap="UserMap">
+       SELECT user_id,name,password,last_login,status,
+              login_err , create_time , last_ip
+       FROM t_user
+       WHERE <if test="colName == 'all'">
+                 user_id LIKE #{keyWord}
+                 OR name LIKE #{keyWord}
+                 OR last_login LIKE #{keyWord}
+                 OR status LIKE #{keyWord}
+                 OR login_err LIKE #{keyWord}
+                 OR create_time LIKE #{keyWord}
+                 OR last_ip   LIKE #{keyWord}
+             </if>
+             <if test="colName == 'user_id'">
+                 user_id LIKE #{keyWord}
+             </if>
+             <if test="colName == 'name'">
+                 name LIKE #{keyWord}
+             </if>
+             <if test="colName == 'last_login'">
+                 last_login LIKE #{keyWord}
+             </if>
+             <if test="colName == 'status'">
+                 status LIKE #{keyWord}
+             </if>
+             <if test="colName == 'login_err'">
+                 login_err LIKE #{keyWord}
+             </if>
+             <if test="colName == 'create_time'">
+                 create_time LIKE #{keyWord}
+             </if>  
+             <if test="colName == 'last_ip'">
+                 last_ip LIKE #{keyWord}
+             </if>                                     
+    </select>
+    
+    <!-- 根据用户名查询用户信息,主要是支持Shiro框架完成安全认证 -->
+    <select id="findByName" parameterType="java.lang.String" resultType="User">
+         SELECT user_id userId,name,password,last_login lastLogin,
+                status,login_err loginErr,create_time createTime ,
+                last_ip lastIP
+         FROM t_user
+         WHERE name=#{name}
+    </select>
+    
+    <!-- 根据用户名查询用户所属角色名称列表,主要支持Shiro框架完成授权 -->
+    <select id="findRoleNamesByName" parameterType="java.lang.String" resultType="java.lang.String">
+         SELECT name
+         FROM t_role 
+         WHERE role_id IN(
+                 SELECT role_id 
+                 FROM t_user_role
+                 WHERE user_id=(
+                       SELECT   user_id
+                       FROM t_user
+                       WHERE name=#{name}
+                 )
+         )
+    </select>
+    
+    <select id="findPermissionNamesByName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT name
+        FROM t_permission
+        WHERE permission_id IN(
+                      SELECT permission_id
+                      FROM t_role_permission
+                      WHERE role_id IN(
+                            SELECT role_id
+                            FROM t_role
+                            WHERE role_id IN(
+                                      SELECT role_id
+                                      FROM t_user_role
+                                      WHERE user_id=(
+                                             SELECT user_id
+                                             FROM t_user
+                                             WHERE name=#{name}
+                                      )
+                            )
+                      )  
+        )
+    </select>
+    
+    
+     	
+</mapper>
