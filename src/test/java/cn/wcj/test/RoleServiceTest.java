@@ -42,7 +42,7 @@ public class RoleServiceTest {
 	
 	@Test
 	public void testDoRemove()throws Exception{
-		 System.out.println("删除数据量:"+roleService.doRemove(2)) ;
+		 System.out.println("删除数据量:"+roleService.doRemove(1)) ;
 	}
 	
 	@Autowired

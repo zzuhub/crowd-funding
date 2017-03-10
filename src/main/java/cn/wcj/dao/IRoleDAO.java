@@ -3,7 +3,8 @@ package cn.wcj.dao;
 
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
+
+import org.springframework.stereotype.Repository;
 
 import cn.wcj.entity.Role;
 /**
@@ -15,7 +16,7 @@ import cn.wcj.entity.Role;
  * @since 2017-03-08 09:01:27
  *
  */
-@Service("roleDAO")
+@Repository("roleDAO")
 public interface IRoleDAO extends IBaseDAO<Role, Integer> {
 	 
 	 //查找下一次主键增长的ID

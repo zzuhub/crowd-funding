@@ -52,9 +52,10 @@
        )
     </select>
     
-    <!-- 删除t_role_permission表对应的数据 -->
+    <!-- 删除t_role_permission,t_user_role表对应的数据 -->
     <delete id="doRemovePre" parameterType="java.lang.Integer">
-       DELETE FROM t_role_permission WHERE role_id=#{roleId}
+       DELETE FROM t_role_permission WHERE role_id=#{roleId} ;
+       DELETE FROM t_user_role WHERE role_id=#{roleId}  ;
     </delete>
     
     <!-- 删除t_role表对应的数据 -->
