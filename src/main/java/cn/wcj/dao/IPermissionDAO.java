@@ -31,5 +31,4 @@ public interface IPermissionDAO extends IBaseDAO<Permission, Integer> {
 	  Integer doRemovePre(Integer id)throws Exception   ;
 	
 	  
-	  
 }

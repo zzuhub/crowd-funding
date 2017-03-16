@@ -23,6 +23,12 @@ public interface Contants extends Serializable {
 	
 	 public static final Integer COMMON_HASH_ITERATIONS=1024  ;   //通用加密次数
 	 
+	 //过滤器链文件的名称
+	 public static final String FILTER_CHAIN_FILE="filterChain.properties"   ;
+	 
+	 //AJAX调用SpringMVC回传JSON格式的状态码,反馈操作状态
+	 public static final String SUCCESS_STATUS_JSON="{\"status\":\"1\"}" ;
+	 public static final String FAILURE_STATUS_JSON="{\"status\":\"0\"}"  ;
 	 
 	 
 }

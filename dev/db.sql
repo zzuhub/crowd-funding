@@ -44,7 +44,7 @@ CREATE TABLE t_user(
      CONSTRAINT pk_user_id PRIMARY KEY(user_id)
 )  ;
 INSERT INTO t_user(name,password,last_login,status,login_err,create_time,last_ip)
-            VALUES('wcj','wcj1234',NULL,1,0,NOW(),'125.41.71.33')   ;
+            VALUES('wcj1234','ed6469759b82ee2598de0f8feb8d5e22',NULL,1,0,NOW(),'125.41.71.33')   ;
 COMMIT  ;
 SELECT * FROM t_user ;       
      

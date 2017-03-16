@@ -1,2 +1,10 @@
 eclipse.preferences.version=1
 encoding//dev/db.sql=UTF-8
+encoding//src/main/webapp/js/Message_zh_CN.js=UTF-8
+encoding//src/main/webapp/js/common.js=UTF-8
+encoding//src/main/webapp/js/permission_list.js=UTF-8
+encoding//src/main/webapp/js/role.js=UTF-8
+encoding//src/main/webapp/js/role_list.js=UTF-8
+encoding//src/main/webapp/js/split_search.js=UTF-8
+encoding//src/main/webapp/js/split_util.js=UTF-8
+encoding//src/main/webapp/js/user_login.js=UTF-8

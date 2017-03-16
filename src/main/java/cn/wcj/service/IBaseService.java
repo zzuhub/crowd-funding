@@ -46,12 +46,11 @@ public interface IBaseService<T,ID> {
 	 * 
 	 * @param currentPage 当前页
 	 * @param lineSize    每页显示数据量
-	 * @param colNames    列名集合
 	 * @param keyWord     搜索关键词
 	 * @return            符合检索条件的实体集合和分页参数(KV键值对的形式)
 	 * @throws Exception  异常直接抛出,我们会开发AOP形式的异常捕获方式
 	 */
-	Map<String,Object> findAll(Integer currentPage,Integer lineSize ,String colName,String keyWord)throws Exception   ;
+	Map<String,Object> findAll(Integer currentPage,Integer lineSize ,String keyWord)throws Exception   ;
 	
 	//===================================================find**表示读操作end===========================================
 	

@@ -4,5 +4,99 @@
           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
                               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
           id="WebApp_ID" version="2.5">
-    
+      <display-name>crowd-funding</display-name>
+      <!-- 首页只有1个,即登录页面,所以视图封装在WEB-INF/views/**-->
+	  <welcome-file-list>
+	    <welcome-file>login.jsp</welcome-file>
+	  </welcome-file-list>
+	  
+	<!-- 配置Spring -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<!-- 多个配置文件的使用方法 -->
+		<param-value>
+		   classpath*:beans-spring.xml,
+		   classpath*:beans-mybatis.xml,
+		   classpath*:beans-shiro.xml,
+		   classpath*:beans-quartz.xml,
+		   classpath*:beans-log.xml
+		</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	  
+	  
+	<!-- 配置SpringMVC -->
+	<servlet>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:beans-mvc.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springDispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	  
+      <!-- 配置编码过滤器 -->
+	  <!-- 必须放在所有过滤器之前! -->
+	  <filter>
+	     <filter-name>characterEncodingFilter</filter-name>
+	     <filter-class>
+	         org.springframework.web.filter.CharacterEncodingFilter
+	     </filter-class>
+	     <init-param>
+	        <param-name>encoding</param-name>
+	        <param-value>UTF-8</param-value>
+	     </init-param>
+	  </filter>
+	  <filter-mapping>
+	           <filter-name>characterEncodingFilter</filter-name>
+	           <url-pattern>/*</url-pattern>
+	  </filter-mapping>	  
+	  
+	 <!-- 配置Restful风格编程-->
+	  <filter>
+	     <filter-name>hiddenHttpMethodFilter</filter-name>
+	     <filter-class>
+	         org.springframework.web.filter.HiddenHttpMethodFilter
+	     </filter-class>
+	  </filter>
+	  <filter-mapping>
+	     <filter-name>hiddenHttpMethodFilter</filter-name>
+	     <url-pattern>/*</url-pattern>
+	  </filter-mapping>	  
+	  
+	  
+	 <!-- 配置Shiro过滤器 -->
+	  <filter>
+	    <filter-name>shiroFilter</filter-name>
+	    <filter-class>
+	       org.springframework.web.filter.DelegatingFilterProxy
+	    </filter-class>
+	    <init-param>
+	       <!-- 
+	                       该值缺省为false,
+	                       表示生命周期由SpringApplicationContext管理,
+	                       设置为true则表示由ServletContainer管理
+            -->  
+	       <param-name>targetFilterLifecycle</param-name>
+	       <param-value>true</param-value>
+	    </init-param>
+	  </filter>
+	  <filter-mapping>
+	      <filter-name>shiroFilter</filter-name>
+	      <url-pattern>/*</url-pattern>
+	  </filter-mapping>
+	  
+	  <!-- 不配置JFreeChart了,本项目使用百度ECharts生成报表 -->
+	  
+	  
+	  
 </web-app>

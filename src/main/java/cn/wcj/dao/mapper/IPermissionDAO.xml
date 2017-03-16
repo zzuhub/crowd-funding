@@ -37,26 +37,17 @@
     </insert>
     
     <!-- 由于向MyBatis传入多个参数了,使用脚标区分 -->
-    <select id="findAll" resultType="Permission" parameterType="java.util.Map">
-         SELECT permission_id permissionId ,name , note
+    <select id="findAll" parameterType="java.lang.String" resultMap="PermissionMap" >
+         SELECT permission_id,name,note
          FROM t_permission
-         WHERE <if test="colName == 'all'">
-                  permission_id LIKE #{keyWord} 
-                  OR name LIKE #{keyWord}
-                  OR note LIKE #{keyWord}
-               </if>
-               <if test="colName == 'note'">
-                  note LIKE #{keyWord}
-               </if>
-               <if test="colName == 'name'">
-                 name LIKE #{keyWord}
-               </if>
-               <if test="colName == 'permission_id'">
-                 permission_id LIKE #{keyWord}
-               </if>
-                 
+         WHERE  permission_id LIKE #{keyWord} OR UPPER(name) LIKE #{keyWord} OR UPPER(note) LIKE #{keyWord}
     </select>
     
+    <resultMap type="Permission" id="PermissionMap">
+       <id column="permission_id" property="permissionId"/>
+       <result column="name" property="name" />
+       <result column="note" property="note" />
+    </resultMap>
     
     
     

@@ -3,5 +3,85 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!-- ===========================配置Shiro安全框架====================== -->
+    
+    <!-- 配置Ehcache缓存 -->
+    <!-- 1.加入jar包:ehcache-core-XXX.jar-->
+    <!-- 2.加入ehcache.xml配置文件 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/> 
+    </bean>
+
+   
+     <!-- 配置Realm -->
+     <bean id="shiroRealm" class="cn.wcj.security.ShiroRealm">
+         <!-- 配置加密算法 -->
+         <property name="credentialsMatcher">
+           <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+             <!-- 设置加密方式 -->
+             <property name="hashAlgorithmName" value="MD5"></property>
+             <!-- 设置加密次数 -->
+             <property name="hashIterations" value="1024"></property>
+           </bean>
+         </property>
+     </bean>
+   
+   
+   
+    <!-- 配置SecurityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 引用缓存 -->
+        <property name="cacheManager" ref="cacheManager"/>
+        <!-- 配置Realm -->
+        <property name="realm" ref="shiroRealm"></property>
+        <!-- 设置RememberMe生存时间 -->
+        <property name="rememberMeManager.cookie.maxAge" value="10"></property>
+    </bean>
+     
+
+    
+    <!-- 配置LifecycleBeanPostProcessor,可以被IOC容器中ShiroBean调用-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+   
+    <!-- 启用Shiro注解,但必须在配置了LifecycleBeanPostProcessor之后才可以使用 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+     
+    <!-- 
+               ※ 配置ShiroFilter,id必须和web.xml文件中DelegatingFilterProxy的filter-name一致 ,
+                   若不一致,则会抛出异常如下:
+        org.springframework.beans.factory.NoSuchBeanDefinitionException:
+                                        No bean named 'shiroFilter' is defined
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="login.jsp"/>
+        <property name="unauthorizedUrl" value="unauthorized.jsp"/>
+        <!--
+                          配置需要受到访问保护的页面,以及访问这些页面需要的权限
+           ①anon 可以匿名访问
+           ②authc 必须认证(登陆)后才能访问
+           ③路径优先原则:先匹配的路径
+           ④roles 角色拦截器
+         -->
+       <!-- 在项目中,可以将以上URL资源放到数据表或配置文件中 -->
+       <!-- 1.配置属性 -->
+       <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap">
+       </property>
+    </bean>
+       <!-- 2.配置工厂类 -->    
+       <bean id="filterChainDefinitionMapBuilder" 
+              class="cn.wcj.security.FilterChainDefinitionMapBuilder">
+       </bean>     
+       <!-- 3.配置实例工厂 -->
+       <bean id="filterChainDefinitionMap" 
+             factory-bean="filterChainDefinitionMapBuilder" 
+             factory-method="buildfilterChainDefinitionMap">
+       </bean>
+
 
 </beans>

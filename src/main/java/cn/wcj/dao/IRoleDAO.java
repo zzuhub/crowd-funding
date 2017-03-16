@@ -27,13 +27,14 @@ public interface IRoleDAO extends IBaseDAO<Role, Integer> {
 	 //这次挑战还是不行,还是老老实实传入Map吧
 	 Integer doCreateAfter(Map<String,Object> map) throws Exception  ;
 	 
-	 //删除t_role_permission对应的数据
+	 //删除t_role_permission,t_user_role对应的数据
 	 Integer doRemovePre(Integer roleId)throws Exception   ;
 	 
+	 //更新前,删除t_role_permission表对应的数据
+	 Integer doUpdatePre(Integer roleId)throws Exception   ;
 	 
-	 
-	 
-	 
+	 //根据角色名称查询角色,主要是给AJAX做CRUD时验证用户名的唯一性
+	 Role findByName(String name)throws Exception    ;
 	 
 	 
 	 

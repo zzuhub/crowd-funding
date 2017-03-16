@@ -12,4 +12,7 @@ import cn.wcj.entity.Role;
  * 主要在这里定义特殊的方法
  *
  */
-public interface IRoleService extends IBaseService<Role, Integer> {}
+public interface IRoleService extends IBaseService<Role, Integer> {
+	 //根据角色名称查询角色,主要是给AJAX做CRUD时验证用户名的唯一性
+	 Role findByName(String name)throws Exception    ;
+}

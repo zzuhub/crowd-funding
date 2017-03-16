@@ -1,8 +1,8 @@
 package cn.wcj.dao;
 
 import java.io.Serializable;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -41,9 +41,9 @@ public interface IBaseDAO<T,ID> extends Serializable{
 	
 	T findByID(ID id)throws Exception   ;
 
-	//根据列名和关键词查找,当需要分页的时候,服务层调用MyBatisPageHelper即可完成分页显示
-	//String colName,String keyWord
-	List<T> findAll(Map<String,Object> map)throws Exception   ;
+	//根据列名和关键词查找,当需要分页的时候,服务层调用MyBatis-PageHelper即可完成分页显示
+	//传入关键字keyWord即可,直接全字段模糊查询
+	List<T> findAll(String keyWord)throws Exception   ;
 	
 	//===================================================find**表示读操作end===========================================
 	

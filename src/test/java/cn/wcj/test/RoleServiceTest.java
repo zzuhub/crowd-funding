@@ -71,7 +71,7 @@ public class RoleServiceTest {
 	
 	@Test
 	public void testFindAll()throws Exception{
-		  Map<String, Object> map = this.roleService.findAll(1, 2, "all", "…–—ßÃ√")   ;
+		  Map<String, Object> map = this.roleService.findAll(1, 2, "æ≠¿Ì")   ;
 		  List<Role> roles=(List<Role>) map.get("data");
 		  for(Role role : roles){
 			  System.out.println(role);
@@ -79,7 +79,10 @@ public class RoleServiceTest {
 		  System.out.println(map.get("pageInfo"));
 	}
 	
-	
+	@Test
+	public void testFindByName()throws Exception{
+		 System.out.println(this.roleService.findByName("admin1111"));
+	}
 	
 
 }

@@ -26,7 +26,7 @@ public class DataUtil {
 	public static String genDBKeyWord(String keyWord)throws Exception{
 		   String result="%%"  ;   //默认关键词是查询全部
 		   if(!isNull(keyWord))   //如果关键词不为空
-			      result="%"+keyWord+"%"  ;   //组织关键词
+			      result="%"+(keyWord.trim())+"%"  ;   //组织关键词
 		   return result   ;   //返回生成的结果
 	}
 	

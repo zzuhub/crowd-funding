@@ -65,7 +65,7 @@ public class PermissionServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindAll()throws Exception{
-		 Map<String, Object> map = permissionService.findAll(0, 2, "permission_id", "1")  ;
+		Map<String, Object> map = permissionService.findAll(1, 0, "")  ;
 		List<Permission> permissions=(List<Permission>)map.get("data");
 		 for(Permission permission : permissions)
 			  System.out.println(permission)   ;

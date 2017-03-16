@@ -1,12 +1,12 @@
 package cn.wcj.service.impl;
 
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
 import cn.wcj.dao.IBaseDAO;
 import cn.wcj.service.IBaseService;
-import cn.wcj.util.DataUtil;
 import static cn.wcj.util.DataUtil.* ;
 
 import com.github.pagehelper.PageHelper;
@@ -63,15 +63,12 @@ public abstract class BaseServiceImpl<T,ID> implements IBaseService<T, ID> {
 
 	@Override
 	public Map<String,Object> findAll(Integer currentPage, Integer lineSize,
-			                          String colName, String keyWord) throws Exception {
+			                                               String keyWord) throws Exception {
 		Map<String,Object> result=new HashMap<>() ;   //保存结果集
 		keyWord=genDBKeyWord(keyWord)  ;             //生成数据库查询时候的关键词
         PageHelper.startPage(currentPage, lineSize)   ;   //使用分页工具
-        Map<String,Object> map=new HashMap<>()  ;  //保存分页必备信息:colNames、keyWord
-        map.put("colName", colName)  ;
-        map.put("keyWord", keyWord)  ;
-        List<T> data=this.dao.findAll(map)  ;  //查询
-        PageInfo<T> pageInfo=new PageInfo<>(data)   ;    //分页信息
+        List<T> data=this.dao.findAll(keyWord)  ;  //查询
+        PageInfo<T> pageInfo=new PageInfo<T>(data)   ;    //分页信息
         result.put("data", data)  ;  //放入数据
         result.put("pageInfo", pageInfo) ;   //放入分页信息 
 		return result   ;

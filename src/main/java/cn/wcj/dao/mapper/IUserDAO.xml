@@ -92,47 +92,24 @@
     </delete>
     
     <!-- 动态SQL语句 -->
-    <select id="findAll" parameterType="java.util.Map" resultMap="UserMap">
+    <select id="findAll" parameterType="java.lang.String" resultMap="UserMap">
        SELECT user_id,name,password,last_login,status,
               login_err , create_time , last_ip
        FROM t_user
-       WHERE <if test="colName == 'all'">
-                 user_id LIKE #{keyWord}
-                 OR name LIKE #{keyWord}
+       WHERE     user_id LIKE #{keyWord}
+                 OR UPPER(name) LIKE #{keyWord}
                  OR last_login LIKE #{keyWord}
                  OR status LIKE #{keyWord}
                  OR login_err LIKE #{keyWord}
                  OR create_time LIKE #{keyWord}
                  OR last_ip   LIKE #{keyWord}
-             </if>
-             <if test="colName == 'user_id'">
-                 user_id LIKE #{keyWord}
-             </if>
-             <if test="colName == 'name'">
-                 name LIKE #{keyWord}
-             </if>
-             <if test="colName == 'last_login'">
-                 last_login LIKE #{keyWord}
-             </if>
-             <if test="colName == 'status'">
-                 status LIKE #{keyWord}
-             </if>
-             <if test="colName == 'login_err'">
-                 login_err LIKE #{keyWord}
-             </if>
-             <if test="colName == 'create_time'">
-                 create_time LIKE #{keyWord}
-             </if>  
-             <if test="colName == 'last_ip'">
-                 last_ip LIKE #{keyWord}
-             </if>                                     
     </select>
     
     <!-- 根据用户名查询用户信息,主要是支持Shiro框架完成安全认证 -->
-    <select id="findByName" parameterType="java.lang.String" resultType="User">
-         SELECT user_id userId,name,password,last_login lastLogin,
-                status,login_err loginErr,create_time createTime ,
-                last_ip lastIP
+    <select id="findByName" parameterType="java.lang.String" resultMap="UserMap">
+         SELECT user_id ,name,password,last_login ,
+                status,login_err ,create_time ,
+                last_ip 
          FROM t_user
          WHERE name=#{name}
     </select>

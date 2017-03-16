@@ -12,4 +12,5 @@ import cn.wcj.entity.Permission;
  */
 public interface IPermissionService extends IBaseService<Permission, Integer> {
 
+	
 }

@@ -76,8 +76,8 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Integer>
 	@Override
 	public Integer doUpdate(Role entity) throws Exception {
 		Integer count=0 ;
-		//1.删除t_role_permission对应的数据:doRemovePre()
-		count+=this.roleDAO.doRemovePre(entity.getRoleId())    ;
+		//1.删除t_role_permission对应的数据:doUpdatePre()
+		count+=this.roleDAO.doUpdatePre(entity.getRoleId())    ;
 		//2.修改t_role 
 		count+=this.roleDAO.doUpdate(entity)   ;
 		//3.向t_role_permission增加对应的数据
@@ -89,6 +89,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Integer>
 		map.put("list", list) ;  //放置全部权限ID
 		count+=this.roleDAO.doCreateAfter(map)  ;
 		return count;
+	}
+
+	@Override
+	public Role findByName(String name) throws Exception {
+		return this.roleDAO.findByName(name) ;
 	}
 
 	

@@ -70,6 +70,11 @@
        WHERE role_id=#{roleId}
     </update>
     
+    <!-- 修改操作只需要删除t_role_permission表,然后重做数据即可 -->
+    <delete id="doUpdatePre" parameterType="java.lang.Integer">
+       DELETE FROM t_role_permission WHERE role_id=#{roleId}
+    </delete>
+    
     <!-- 批量增加t_role -->
     <insert id="doBatchCreate" parameterType="java.util.List">
        INSERT INTO t_role(name,note)
@@ -79,27 +84,20 @@
        </foreach>
     </insert>
     
-    <select id="findAll" parameterType="java.util.Map" resultMap="RoleMap">
+    <select id="findAll" parameterType="java.lang.String" resultMap="RoleMap">
         SELECT role_id,name,note
         FROM t_role
-        WHERE <if test="colName == 'all'">
-                role_id LIKE #{keyWord}
-                OR name LIKE #{keyWord}
-                OR note LIKE #{keyWord}
-              </if>
-              <if test="colName =='role_id'">
-                role_id LIKE #{keyWord}
-              </if>
-              <if test="colName =='name'">
-                name LIKE #{keyWord}
-              </if>
-              <if test="colName =='note'">
-                note LIKE #{keyWord}
-              </if>
+        WHERE   role_id LIKE #{keyWord}
+                OR UPPER(name) LIKE #{keyWord}
+                OR UPPER(note) LIKE #{keyWord}
     </select>
     
     
-    
+    <select id="findByName" parameterType="java.lang.String" resultMap="RoleMap">
+        SELECT role_id,name,note
+        FROM t_role
+        WHERE  name=#{name}
+    </select>
     
     
     

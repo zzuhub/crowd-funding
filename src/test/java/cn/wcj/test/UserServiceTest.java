@@ -71,7 +71,7 @@ public class UserServiceTest {
 	
 	@Test
 	public void testFindAll()throws Exception{
-		 Map<String, Object> map = userService.findAll(1, 2, "last_ip", "125.41.71.33")   ;
+		 Map<String, Object> map = userService.findAll(1, 2,  "wcj1234")   ;
 		 List<User> list=(List<User>) map.get("data") ;
 		 for(User user : list)
 			   System.out.println(">>>>>>>>>>>>>>>>>>>>>>>"+user);     ;
