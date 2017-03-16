@@ -11,8 +11,6 @@
 		<config>src/main/resources/beans-shiro.xml</config>
 		<config>src/main/resources/beans-mvc.xml</config>
 		<config>src/main/resources/beans-spring.xml</config>
-		<config>src/main/resources/beans-quartz.xml</config>
-		<config>src/main/resources/beans-log.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
