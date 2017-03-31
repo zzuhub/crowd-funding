@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.IProjectDAO">
+	
+    <insert id="doCreate" parameterType="Project">
+       INSERT INTO t_project(category_id,user_id,expect_money,real_money,note,tel,status,title)
+                   VALUES(#{category.id},#{user.userId},#{expectMoney},
+                          #{realMoney},#{note},#{tel},#{status},#{title} )
+    </insert>
+    
+    <select id="findByID" parameterType="java.lang.Integer" resultMap="ProjectMap">
+       SELECT project_id,title,category_id ,user_id,expect_money,real_money,note,tel,status
+       FROM t_project
+       WHERE project_id=#{id}
+    </select>
+    
+    <resultMap type="Project" id="ProjectMap">
+      <id column="project_id" property="projectId" />
+      <result column="title" property="title"/>
+      <result column="expect_money" property="expectMoney" />
+      <result column="real_money" property="realMoney" />
+      <result column="note" property="note" />
+      <result column="tel" property="tel" />
+      <result column="status" property="status" />
+      <association property="category" column="category_id" select="findCategoryByID" />
+      <association property="user" column="user_id" select="findUserByID" />
+      <collection property="photos" column="project_id" select="findPhotosByID"/>
+      <collection property="comments" column="project_id" select="findCommentsByID"/>
+    </resultMap>
+    <select id="findCategoryByID" parameterType="java.lang.Integer" resultType="Category">
+      SELECT id ,name
+      FROM t_category
+      WHERE id=#{id}
+    </select>
+    <select id="findUserByID" parameterType="java.lang.Integer" resultType="User">
+        SELECT user_id userId,name,password,last_login lastLogin,status,login_err loginErr , create_time createTime,last_ip lastIP
+        FROM t_user
+        WHERE user_id=#{id}
+    </select>
+    <select id="findPhotosByID" parameterType="java.lang.Integer" resultType="Photo">
+       SELECT photo_id photoId,name
+       FROM t_photo
+       WHERE project_id=#{id}
+    </select>
+    <select id="findCommentsByID" parameterType="java.lang.Integer" resultType="Comment">
+      SELECT comment_id commentId,content
+      FROM t_comment
+      WHERE project_id=#{id}
+    </select>
+    
+    <!-- 只能修改标题、说明、电话、状态 -->
+    <update id="doUpdate" parameterType="Project">
+      UPDATE t_project
+      SET title=#{title},note=#{note},tel=#{tel},status=#{status}
+      WHERE project_id=#{projectId}
+    </update>
+    
+    <select id="findAll" parameterType="java.lang.String" resultMap="ProjectMap" >
+        SELECT project_id,title,category_id,user_id,expect_money,real_money,note,tel,status 
+        FROM t_project
+        WHERE project_id LIKE #{keyWord} 
+              OR UPPER(title) LIKE UPPER(#{keyWord})
+              OR UPPER(note) LIKE UPPER(#{keyWord})
+              OR tel LIKE #{keyWord}
+              OR status LIKE #{keyWord}
+    </select>
+    
+    <insert id="doBatchCreate" parameterType="java.util.List">
+      <foreach collection="list" item="item" index="index" separator=";">
+               INSERT INTO t_project(category_id,user_id,expect_money,real_money,note,tel,status,title)
+                     VALUES(#{item.category.id},#{item.user.userId},#{item.expectMoney},
+                          #{item.realMoney},#{item.note},#{item.tel},#{item.status},#{item.title} )
+      </foreach>
+    </insert>
+    
+    <delete id="doRemove" parameterType="java.lang.Integer">
+       DELETE FROM t_photo WHERE project_id=#{id}   ;
+       DELETE FROM t_comment WHERE project_id=#{id}   ;
+       DELETE FROM t_approve WHERE project_id=#{id}   ;
+       DELETE FROM t_project WHERE project_id=#{id}   ;
+    </delete>
+    
+    <select id="findByUserID" parameterType="java.lang.Integer" resultMap="ProjectMap">
+       SELECT project_id,title,category_id ,user_id,expect_money,real_money,note,tel,status
+       FROM t_project
+       WHERE user_id=#{userId}       
+    </select>
+    
+    
+</mapper>

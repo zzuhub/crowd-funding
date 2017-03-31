@@ -1,6 +1,5 @@
 package cn.wcj.test;
 
-import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -29,11 +28,13 @@ public class DataUtilTest {
 	@Test
 	public void testEncrypt() {
 		String result = DataUtil.encrypt(Contants.ALGORITHM_MD5, 
-				          "atguigu@java",
-				         "atguigu",
+				          "1234wcj",
+				         "wcj1234",
 				         Contants.COMMON_HASH_ITERATIONS)  ;
 		System.out.println(result);
 		System.out.println(result.length());
 	}
+	
+	
 
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.ICategoryDAO">
+	
+        <insert id="doCreate" parameterType="Category">
+          INSERT INTO t_category(name)VALUES(#{name}) 
+        </insert>
+    
+         <update id="doUpdate" parameterType="Category">
+            UPDATE t_category
+            SET name=#{name}
+            WHERE id=#{id}
+         </update>
+         
+         <select id="findByID" parameterType="java.lang.Integer" resultMap="CategoryMap">
+            SELECT id,name
+            FROM t_category
+            WHERE id=#{id}
+         </select>
+         <resultMap type="Category" id="CategoryMap">
+            <id column="id" property="id" />
+            <result column="name" property="name" />
+            <collection property="projects" column="id" select="findAllProjects" />
+         </resultMap>
+         <select id="findAllProjects" parameterType="java.lang.Integer" resultType="Project">
+            SELECT project_id projectId,expect_money expectMoney,real_money realMoney,note,tel,status,title
+            FROM t_project
+            WHERE category_id=#{id}
+         </select>
+         
+         <delete id="doRemove" parameterType="java.lang.Integer">
+           DELETE FROM t_photo 
+           WHERE project_id IN(
+                        SELECT project_id 
+                        FROM t_project
+                        WHERE category_id=#{id}    
+           )  ;
+           DELETE FROM t_approve
+           WHERE project_id IN(
+                   SELECT project_id
+                   FROM t_project
+                   WHERE category_id=#{id}
+           )  ;
+           DELETE FROM t_comment
+           WHERE project_id IN(
+                   SELECT project_id 
+                   FROM t_project
+                   WHERE category_id=#{id}
+           )   ;
+           DELETE FROM t_project WHERE category_id=#{id}   ;
+           DELETE FROM t_category WHERE id=#{id}   ;
+         </delete>
+    
+    
+        <select id="findAll" parameterType="java.lang.String" resultMap="CategoryMap">
+            SELECT id,name
+            FROM t_category
+            WHERE id LIKE #{keyWord} OR name LIKE #{keyWord}
+        </select>
+    
+       <insert id="doBatchCreate" parameterType="java.util.List">
+           INSERT INTO t_category(name)
+           VALUES
+           <foreach collection="list" index="index" separator="," item="category">
+              (#{category.name})
+           </foreach>
+       </insert>
+    
+        <select id="findByName" parameterType="java.lang.String" resultMap="CategoryMap">
+           SELECT id , name 
+           FROM t_category
+           WHERE name=#{name}
+        </select>
+    
+     	
+</mapper>

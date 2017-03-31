@@ -1,6 +1,7 @@
 package cn.wcj.dao;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -41,8 +42,12 @@ public interface IUserDAO extends IBaseDAO<User, Integer> {
 	//根据用户名查询权限名称列表
 	List<String> findPermissionNamesByName(String name)throws Exception   ;
 	
+    //修改密码
+	//userId  password
+	Integer doUpdatePassword(User user)throws Exception  ;
 	
-	
+	//AJAX验证用户输入的旧用户名
+	User findByIdAndPass(User user)throws Exception    ;
 	
 	
 }

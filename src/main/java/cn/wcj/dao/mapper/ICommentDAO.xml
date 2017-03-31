@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.ICommentDAO">
+	
+	 <insert id="doCreate" parameterType="Comment">
+	   INSERT INTO t_comment(comment_id,user_id,project_id,content)
+	               VALUES(#{commentId},#{user.userId},#{project.projectId},#{content})
+	 </insert>
+	 
+	 <select id="findByID" parameterType="java.lang.Integer" resultMap="CommentMap">
+	    SELECT comment_id,user_id,project_id,content
+	    FROM t_comment
+	    WHERE comment_id=#{id}
+	 </select>
+    
+     <resultMap type="Comment" id="CommentMap">
+          <id column="comment_id" property="commentId" />
+          <result column="content" property="content" />
+          <association property="user" column="user_id" select="findUserByID" />
+          <association property="project" column="project_id" select="findProjectByID" />
+     </resultMap>
+    
+     <select id="findUserByID" parameterType="java.lang.Integer" resultType="User">
+       SELECT user_id userId,name,password,last_login lastLogin,status,login_err loginErr,create_time createTime,last_ip lastIP
+       FROM t_user
+       WHERE user_id=#{id}
+     </select>
+     
+     <select id="findProjectByID" parameterType="java.lang.Integer" resultType="Project">
+        SELECT project_id projectId,expect_money expectMoney,real_money realMoney,note,tel,status,title
+        FROM t_project
+        WHERE project_id=#{id}
+     </select>
+     
+     <update id="doUpdate" parameterType="Comment">
+       UPDATE t_comment
+       SET content=#{content} 
+       WHERE comment_id=#{commentId}
+     </update>
+     
+     <delete id="doRemove" parameterType="java.lang.Integer">
+       DELETE FROM t_comment WHERE comment_id=#{id}
+     </delete>
+     
+     <select id="findAll" parameterType="java.lang.String" resultMap="CommentMap">
+        SELECT comment_id,user_id,project_id,content
+	    FROM t_comment
+	    WHERE comment_id LIKE #{keyWord}  OR UPPER(content) LIKE UPPER(#{keyWord})
+     </select>
+     
+     <insert id="doBatchCreate" parameterType="java.util.List">
+        <foreach collection="list" index="index" item="item" separator=";">
+             	   INSERT INTO t_comment(comment_id,user_id,project_id,content)
+	               VALUES(#{item.commentId},#{item.user.userId},#{item.project.projectId},#{item.content})
+        </foreach>
+     </insert>
+     
+    
+</mapper>

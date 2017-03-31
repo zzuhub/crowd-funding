@@ -30,5 +30,7 @@ public interface Contants extends Serializable {
 	 public static final String SUCCESS_STATUS_JSON="{\"status\":\"1\"}" ;
 	 public static final String FAILURE_STATUS_JSON="{\"status\":\"0\"}"  ;
 	 
+	 public static final String PROJECT_NAME="crowd-funding";
+	 
 	 
 }

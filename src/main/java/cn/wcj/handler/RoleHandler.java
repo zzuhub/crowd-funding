@@ -1,11 +1,11 @@
 package cn.wcj.handler;
 
 import java.util.List;
+
 import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import cn.wcj.entity.Permission;
 import cn.wcj.entity.Role;
 import cn.wcj.service.IPermissionService;
 import cn.wcj.service.IRoleService;

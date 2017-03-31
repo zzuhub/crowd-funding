@@ -1,6 +1,6 @@
 $.extend($.validator.messages, {
     required: "该字段不允许为空!",
-    remote: "该字段已存在,请重新输入!",
+    remote: "远程验证失败,请重新输入!",
     email: "请输入正确格式的电子邮件!",
     url: "请输入合法的网址!",
     date: "请输入合法的日期!",

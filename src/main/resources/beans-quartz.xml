@@ -4,4 +4,34 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
+  <!-- 配置任务 -->
+  <bean id="photoJob" class="cn.wcj.quartz.job.PhotoJob"></bean>
+  <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+      <!-- 调用目标任务 -->
+      <property name="targetObject" ref="photoJob"></property>
+      <!-- 调用目标方法 -->
+      <property name="targetMethod"  value="clear"></property>
+  </bean>
+  
+  
+   <!-- 配置触发器 -->
+   <bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+       <!-- 配置任务细节 -->
+       <property name="jobDetail" ref="jobDetail"></property>
+       <!-- 配置调度时间表达式 -->
+       <!-- 每天凌晨2点执行清理失效文件 -->
+       <property name="cronExpression" value="0 * 2 * * ?"></property>
+   </bean>
+   
+     <!-- 配置调度器 -->
+  <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+       <property name="triggers">
+            <list>
+              <ref bean="trigger"/>
+            </list>
+       </property>
+  </bean>
+  
+
+
 </beans>

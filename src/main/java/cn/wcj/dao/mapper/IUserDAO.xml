@@ -27,7 +27,6 @@
     
     <delete id="doRemovePre" parameterType="java.lang.Integer">
        DELETE FROM t_user_role WHERE user_id=#{userId}  ;
-       DELETE FROM t_log WHERE user_id=#{userId}   ;
        DELETE FROM t_comment WHERE user_id=#{user_id}   ;
        DELETE FROM t_comment 
        WHERE project_id IN(
@@ -151,6 +150,20 @@
         )
     </select>
     
+    <!-- 根据用户ID修改用户密码 -->
+    <update id="doUpdatePassword" parameterType="User">
+      UPDATE t_user SET password=#{password} WHERE user_id=#{userId}
+    </update>
+    
+    <select id="findByIdAndPass" parameterType="User" resultType="User">
+        SELECT user_id userId,name,
+               password,last_login lastLogin,
+               status,login_err loginErr,
+               create_time createTime,
+               last_ip lastIP
+        FROM t_user
+        WHERE user_id=#{userId} AND password=#{password}
+    </select>
     
      	
 </mapper>
