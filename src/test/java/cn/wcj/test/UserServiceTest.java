@@ -1,6 +1,7 @@
 package cn.wcj.test;
 
 import java.util.Arrays;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +96,21 @@ public class UserServiceTest {
 		System.out.println(">>>>>>>>>>"+userService.findPermissionNamesByName("wcj1234")) ;
 	}
 	
+	@Test
+	public void testDoUpdatePassword()throws Exception{
+		User user=new User() ;
+		user.setUserId(2);
+		user.setPassword("lockadmin");
+		System.out.println("修改数据量:"+this.userService.doUpdatePassword(user));
+	}
 	
-	
-	
-	
+	@Test
+	public void testFindByIdAndPass()throws Exception{
+		 User user=new User() ;
+		 user.setUserId(2);
+		 user.setName("lock");
+		 user.setPassword("lockadmin");
+		 System.out.println(userService.findByIdAndPass(user));
+	}
 
 }

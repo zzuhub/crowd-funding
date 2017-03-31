@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.IApproveDAO">
+	
+	  <insert id="doCreate" parameterType="Approve">
+	     INSERT INTO t_approve(approve_id,project_id,tel,name,money,approve_time)
+	            VALUES(#{approveId},#{project.projectId},#{tel},#{name},#{money},#{approveTime})
+	  </insert>
+    
+      <update id="doCreateAfter" parameterType="Approve">
+         UPDATE t_project 
+         SET real_money=real_money + #{money}
+         WHERE project_id=#{project.projectId}
+      </update>
+    
+      <select id="findByID" parameterType="java.lang.Integer" resultMap="ApproveMap">
+         SELECT approve_id , project_id , tel , name , money , approve_time
+         FROM t_approve
+         WHERE approve_id=#{approveId}
+      </select>
+      
+      <resultMap type="Approve" id="ApproveMap">
+         <id column="approve_id" property="approveId" />
+         <result column="tel" property="tel"/>
+         <result column="name" property="name"/>
+         <result column="money" property="money"/>
+         <result column="approve_time" property="approveTime"/>
+         <association property="project" column="project_id" select="findProjectByID"/>
+      </resultMap>
+      
+      <select id="findProjectByID" resultType="Project" parameterType="java.lang.Integer">
+          SELECT project_id projectId,title , expect_money expectMoney , 
+                 real_money realMoney,note,tel,status
+          FROM t_project
+          WHERE project_id=#{id}
+      </select>
+      
+      <!-- 支持的钱是不可以修改的,还有支持的项目,只能修改tel和name字段 -->
+      <update id="doUpdate" parameterType="Approve">
+         UPDATE t_approve
+         SET tel=#{tel} , name=#{name}
+         WHERE approve_id=#{approveId}
+      </update>
+      
+      <delete id="doRemove" parameterType="java.lang.Integer">
+         DELETE FROM t_approve WHERE approve_id=#{approveId}
+      </delete>
+      
+      <select id="findAll" parameterType="java.lang.String" resultMap="ApproveMap">
+         SELECT approve_id , project_id , tel , name , money , approve_time
+         FROM t_approve
+         WHERE approve_id LIKE #{keyWord}  
+               OR project_id LIKE #{keyWord}
+               OR tel LIKE #{keyWord}
+               OR UPPER(name) LIKE UPPER(#{keyWord})
+               OR money LIKE #{kyeWord}
+               OR DATE_FORMAT(approve_time,'%Y-%m-%d %H:%i:%s') LIKE #{kyeWord}
+      </select>
+    
+       <insert id="doBatchCreate" parameterType="java.util.List">
+         INSERT INTO t_approve(project_id,tel,name,money,approve_time)
+         VALUES
+         <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.project.projectId},#{item.tel},#{item.name},#{item.money},#{item.approveTime})
+         </foreach>
+       </insert>
+       
+       <update id="doBatchCreateAfter" parameterType="java.util.List">
+          <foreach collection="list" index="index" item="item" separator=";">
+             UPDATE t_project
+             SET  real_money=real_money+#{item.money}
+             WHERE project_id=#{item.project.projectId}
+          </foreach>
+       </update>
+    
+    
+</mapper>

@@ -22,6 +22,9 @@ public interface IUserService extends IBaseService<User, Integer> {
 	//根据用户名查询权限名称列表,并将DAO的返回结果List<String>包装到Set<String>中回调给Shiro框架的Realm完成授权
 	Set<String> findPermissionNamesByName(String name)throws Exception  ;
 	
+	Integer doUpdatePassword(User user)throws Exception   ;
 	
+	//AJAX验证用户输入的旧用户名
+	User findByIdAndPass(User user)throws Exception    ;
 	
 }

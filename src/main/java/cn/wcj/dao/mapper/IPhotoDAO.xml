@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 映射DAO配置文件 -->
+<mapper namespace="cn.wcj.dao.IPhotoDAO">
+	  
+	  <insert id="doCreate" parameterType="Photo">
+	    INSERT INTO t_photo(project_id,name)
+	    VALUES(#{project.projectId},#{name})
+	  </insert>
+    
+      <!-- 此更新方法不更新项目ID,因为如果更新项目ID就没有意义而且相当于删除项目对应的照片 -->
+      <update id="doUpdate" parameterType="Photo">
+          UPDATE t_photo 
+          SET name=#{name}
+          WHERE photo_id=#{photoId}
+      </update>
+     
+       <select id="findByID" parameterType="java.lang.Integer" resultMap="PhotoMap">
+          SELECT photo_id,project_id,name
+          FROM t_photo
+          WHERE photo_id=#{id}
+       </select>
+     	
+        <resultMap type="Photo" id="PhotoMap">
+          <id property="photoId" column="photo_id" />
+          <result property="name" column="name" />
+          <association property="project" column="project_id" select="findProjectByID"/>
+        </resultMap>
+        
+        <select id="findProjectByID" parameterType="java.lang.Integer" resultType="Project">
+           SELECT project_id projectId,expect_money expectMoney,real_money realMoney,note,tel,status,title 
+           FROM t_project
+           WHERE project_id=#{id}
+        </select>
+        	
+     	<delete id="doRemove" parameterType="java.lang.Integer">
+     	    DELETE FROM t_photo WHERE photo_id=#{id} 
+     	</delete>
+     	
+     	<select id="findAll" parameterType="java.lang.String" resultMap="PhotoMap">
+     	   SELECT photo_id , name , project_id
+     	   FROM t_photo
+     	   WHERE photo_id LIKE #{keyWord} OR name LIKE #{keyWord}
+     	</select>
+     	
+     	<!-- 批量增加 -->
+     	<insert id="doBatchCreate" parameterType="java.util.List">
+     	   INSERT INTO t_photo(project_id,name)
+     	   VALUES
+     	   <foreach collection="list" item="item" index="index" separator=",">
+     	       (#{item.project.projectId},#{item.name})
+     	   </foreach>
+     	</insert>
+     	
+     	
+</mapper>

@@ -79,7 +79,8 @@ $(function(){
                             	 perms[index++]=$(this).val()  ;
                              });
 	    		             $.ajax({
-	    		                 url : "../doUpdate"  ,                         //Ajax提交路径
+	    		                 //url : "../doUpdate"  ,                         //Ajax提交路径
+	    		                 url : url ,                         //Ajax提交路径
 	    		                 data : {                                             //传递的参数
 	    		              	     "roleId"  :  roleId  ,
 	    		                     "name"    :   name   ,
@@ -191,7 +192,8 @@ $(function(){
                        	 perms[index++]=$(this).val()  ;
                         });
    		             $.ajax({
-   		                 url : "../Role/doCreate"  ,                         //Ajax提交路径
+   		                // url : "../Role/doCreate"  ,                         //Ajax提交路径
+   		                 url : url  ,                         //Ajax提交路径
    		                 data : {                                             //传递的参数
    		                     "name"    :   name   ,
    		                     "note" :   note ,

@@ -17,6 +17,8 @@ import cn.wcj.dao.IUserDAO;
 import cn.wcj.entity.Role;
 import cn.wcj.entity.User;
 import cn.wcj.service.IUserService;
+import cn.wcj.util.Contants;
+import cn.wcj.util.DataUtil;
 
 /**
  * 用户Service层
@@ -154,6 +156,34 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer>
 		List<String> permissionNameList=this.userDAO.findPermissionNamesByName(name)  ;  //原生权限名称列表
 		permissionNameSet.addAll(permissionNameList)  ;   //封装原声权限名称列表 
 		return permissionNameSet    ;
+	}
+
+
+	@Override
+	public Integer doUpdatePassword(User user) throws Exception {
+		//1.保存新密码
+		String newPassword=user.getPassword()  ;  //新密码
+		//2.根据用户名查找用户完整信息,因为涉及到盐值加密
+		User detailUser = this.userDAO.findByID(user.getUserId());
+		//3.得到用户名称作为盐值,准备加密
+		String userName=detailUser.getName()  ;  //用户名
+		detailUser.setPassword(DataUtil.encrypt(Contants.ALGORITHM_MD5, 
+				              newPassword, 
+				              userName, 
+				              Contants.COMMON_HASH_ITERATIONS ) )  ;
+		return this.userDAO.doUpdatePassword(detailUser)  ;
+	}
+
+
+	@Override
+	public User findByIdAndPass(User user) throws Exception {
+        //1.获取用户名和密码
+		String userName=user.getName()   ;
+		String password=user.getPassword() ;
+        //2.对密码进行盐值加密
+		user.setPassword(DataUtil.encrypt(Contants.ALGORITHM_MD5, password, userName, Contants.COMMON_HASH_ITERATIONS )) ;
+		//3.开始查询
+		return this.userDAO.findByIdAndPass(user) ;
 	}
 	
 	

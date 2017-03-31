@@ -7,8 +7,9 @@
       <display-name>crowd-funding</display-name>
       <!-- 首页只有1个,即登录页面,所以视图封装在WEB-INF/views/**-->
 	  <welcome-file-list>
-	    <welcome-file>login.jsp</welcome-file>
+	    <welcome-file>index.jsp</welcome-file>
 	  </welcome-file-list>
+	
 	  
 	<!-- 配置Spring -->
 	<context-param>
@@ -18,8 +19,7 @@
 		   classpath*:beans-spring.xml,
 		   classpath*:beans-mybatis.xml,
 		   classpath*:beans-shiro.xml,
-		   classpath*:beans-quartz.xml,
-		   classpath*:beans-log.xml
+		   classpath*:beans-quartz.xml
 		</param-value>
 	</context-param>
 
@@ -97,6 +97,6 @@
 	  
 	  <!-- 不配置JFreeChart了,本项目使用百度ECharts生成报表 -->
 	  
-	  
+
 	  
 </web-app>

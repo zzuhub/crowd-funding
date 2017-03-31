@@ -11,8 +11,9 @@
 	<div class="navigation">
 		<ul>
 		 	<li>欢迎您！</li>
-		 	<li>${user.name}</li>
+		 	<li>${sessionScope.user.name}</li>
 			<li><a href="${pageContext.request.contextPath}/User/doLogout">安全退出</a></li>
+			<li><a href="${pageContext.request.contextPath}/User/toEditPassPage/${sessionScope.user.userId}">修改密码</a></li>
 		</ul>
 	</div>
 </div>

@@ -14,6 +14,41 @@ INSERT INTO t_permission(name,note)VALUES('User:SELECT','用户查询');
 INSERT INTO t_permission(name,note)VALUES('User:INSERT','用户增加');
 INSERT INTO t_permission(name,note)VALUES('User:UPDATE','用户修改');
 INSERT INTO t_permission(name,note)VALUES('User:DELETE','用户删除');
+
+INSERT INTO t_permission(name,note)VALUES('Permission:SELECT','权限查询');
+
+INSERT INTO t_permission(name,note)VALUES('Role:SELECT','角色查询') ;
+INSERT INTO t_permission(name,note)VALUES('Role:INSERT','角色增加') ;
+INSERT INTO t_permission(name,note)VALUES('Role:UPDATE','角色修改') ;
+INSERT INTO t_permission(name,note)VALUES('Role:DELETE','角色删除')  ;
+
+
+INSERT INTO t_permission(name,note)VALUES('Project:SELECT','项目查询') ;
+INSERT INTO t_permission(name,note)VALUES('Project:INSERT','项目增加') ;
+INSERT INTO t_permission(name,note)VALUES('Project:UPDATE','项目修改') ;
+INSERT INTO t_permission(name,note)VALUES('Project:DELETE','项目删除')  ;
+
+INSERT INTO t_permission(name,note)VALUES('Approve:SELECT','支持查询') ;
+INSERT INTO t_permission(name,note)VALUES('Approve:INSERT','支持增加') ;
+INSERT INTO t_permission(name,note)VALUES('Approve:UPDATE','支持修改') ;
+INSERT INTO t_permission(name,note)VALUES('Approve:DELETE','支持删除')  ;
+
+INSERT INTO t_permission(name,note)VALUES('Photo:SELECT','照片查询') ;
+INSERT INTO t_permission(name,note)VALUES('Photo:INSERT','照片增加') ;
+INSERT INTO t_permission(name,note)VALUES('Photo:UPDATE','照片修改') ;
+INSERT INTO t_permission(name,note)VALUES('Photo:DELETE','照片删除')  ;
+
+INSERT INTO t_permission(name,note)VALUES('Category:SELECT','类别查询') ;
+INSERT INTO t_permission(name,note)VALUES('Category:INSERT','类别增加') ;
+INSERT INTO t_permission(name,note)VALUES('Category:UPDATE','类别修改') ;
+INSERT INTO t_permission(name,note)VALUES('Category:DELETE','类别删除')  ;
+
+INSERT INTO t_permission(name,note)VALUES('Comment:SELECT','评论查询') ;
+INSERT INTO t_permission(name,note)VALUES('Comment:INSERT','评论增加') ;
+INSERT INTO t_permission(name,note)VALUES('Comment:UPDATE','评论修改') ;
+INSERT INTO t_permission(name,note)VALUES('Comment:DELETE','评论删除')  ;
+
+INSERT INTO t_permission(name,note)VALUES('Echarts:SELECT','报表查询')  ;
 COMMIT ;
 SELECT * FROM t_permission   ;
 
@@ -57,13 +92,39 @@ CREATE TABLE t_role_permission(
      CONSTRAINT fk_rp_role_id  FOREIGN KEY(role_id) REFERENCES t_role(role_id) ,
      CONSTRAINT fk_rp_permission_id FOREIGN KEY(permission_id) REFERENCES t_permission(permission_id)
 )   ;
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,1);
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,2);
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,3);
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,4);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,1);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,2);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,3);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,4);
 
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(4,1);
-INSERT INTO t_role_permission(role_id,permission_id)VALUES(4,2);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,5);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,6);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,7);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,8);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(1,9);
+
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,10);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,11);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,12);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,13);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,14);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,15);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,16);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,17);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,18);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,19);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,20);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,21);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,22);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,23);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,24);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,25);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,26);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,27);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,28);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,29);
+INSERT INTO t_role_permission(role_id,permission_id)VALUES(2,30);
+
 
 SELECT * FROM t_role_permission  ;
 
@@ -75,10 +136,6 @@ CREATE TABLE t_user_role(
        CONSTRAINT pk_user_role_id PRIMARY KEY(id)
 )   ;
 INSERT INTO t_user_role(user_id,role_id)VALUES(1,1) ;
-INSERT INTO t_user_role(user_id,role_id)VALUES(1,2) ;
-INSERT INTO t_user_role(user_id,role_id)VALUES(1,3) ;
-INSERT INTO t_user_role(user_id,role_id)VALUES(1,4) ;
-INSERT INTO t_user_role(user_id,role_id)VALUES(1,5) ;
 SELECT * FROM t_user_role ;
 
 DROP TABLE IF EXISTS t_category ;
@@ -87,7 +144,9 @@ CREATE TABLE t_category(
     name VARCHAR(100)  ,
     CONSTRAINT pk_category_id PRIMARY KEY(id)
 ) ;
-INSERT INTO t_category(name)VALUES('测试类别') ;
+INSERT INTO t_category(name)VALUES('教育') ;
+INSERT INTO t_category(name)VALUES('农业') ;
+INSERT INTO t_category(name)VALUES('扶贫') ;
 SELECT * FROM t_category ;
 
 DROP TABLE IF EXISTS t_project ;
@@ -106,7 +165,7 @@ CREATE TABLE t_project(
       CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES t_user(user_id)
 )   ;
 INSERT INTO t_project(title,category_id,user_id,expect_money,real_money,note,tel,status)
-            VALUES('HelloWorld-Title',1,1,9999.99,8888.88,'HelloWorld','110',1)  ;
+            VALUES('办希望小学',1,1,9999.99,8888.88,'立个Flag,筹他妈50亿','110',1)  ;
 SELECT * FROM t_project ;            
 
 
@@ -123,7 +182,7 @@ CREATE TABLE t_approve(
     CONSTRAINT FOREIGN KEY(project_id) REFERENCES t_project(project_id)
 );
 INSERT INTO t_approve(project_id,tel,name,money,approve_time)
-            VALUES(1,'119','Jerry',0.01,NOW())   ;
+            VALUES(1,'15890037523','Jerry',0.01,NOW())   ;
 COMMIT ;
 SELECT * FROM t_approve ;
 
@@ -153,18 +212,6 @@ INSERT INTO t_comment(user_id,project_id,content)VALUES(1,1,'逗比键') ;
 COMMIT ;
 SELECT * FROM t_comment ;
 
-
-DROP TABLE IF EXISTS t_log   ;
-CREATE TABLE t_log(
-   id  INT(12)  AUTO_INCREMENT ,
-   user_id INT(12)  ,
-   operate VARCHAR(2000),
-   CONSTRAINT pk_log_id PRIMARY KEY(id)  ,
-   CONSTRAINT fk_user_id_l FOREIGN KEY(user_id) REFERENCES t_user(user_id)
-)  ;
-INSERT INTO t_log(user_id,operate)VALUES(1,'操作') ;
-COMMIT ;
-SELECT * FROM t_log ;
 
 
 

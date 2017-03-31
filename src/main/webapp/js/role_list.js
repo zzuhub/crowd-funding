@@ -23,10 +23,7 @@ function toInsertPage(){   //到达增加页面
 	        shade: false,
 	        maxmin: true, //开启最大化最小化按钮
 	        area: ['800px', '500px'],
-	        content: "../Role/toInsertPage",
-	        end : function(){
-	        	layer.msg("数据已录入,请刷新页面或关键词检索");
-	        }
+	        content: "../Role/toInsertPage"
 	      });
     });
 }
@@ -145,7 +142,7 @@ function bind(){
 	        shadeClose: true,
 	        shade: false,
 	        maxmin: true, //开启最大化最小化按钮
-	        area: ['600px', '300px'],
+	        area: ['700px', '400px'],
 	        content: "../Role/toDetailPage/"+roleId
 	      });		 
 	});

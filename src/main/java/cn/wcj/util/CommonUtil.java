@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.wcj.entity.Permission;
+import cn.wcj.entity.Role;
 
 /**
  * 封装通用方法
@@ -26,5 +27,22 @@ public class CommonUtil {
 		   }
 		   return permissions  ;
 	}
+	
+	/**
+	 * 
+	 * @param roles 角色ID数组
+	 * @return 封装角色ID的角色列表,专门完成DAO层批量操作用的
+	 * @throws Exception 异常直接抛出,交给控制层处理 
+	 */
+	public static List<Role> genRoleList(Integer[] roles)throws Exception{
+		   List<Role> roleList=new ArrayList<>()  ;
+		   for(Integer roleId : roles){
+			   Role role=new Role()   ;
+			   role.setRoleId(roleId) ;   //设置角色ID
+			   roleList.add(role)   ;   //增加角色
+		   }
+		   return roleList  ;
+	}
+	
 	
 }
